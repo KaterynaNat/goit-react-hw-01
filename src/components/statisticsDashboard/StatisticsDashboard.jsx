@@ -4,12 +4,27 @@ import Select from "react-select";
 import styles from "./StatisticsDashboard.module.css";
 import StatisticsTable from "../statisticsTable/StatisticsTable";
 import StatisticsChart from "../statisticsChart/StatisticsChart";
+import BallanceTab from "../ballanceTab/BallanceTab";
+import CurrencyTab from "../currencyTab/CurrencyTab";
+
+// import { useSelector } from "react-redux";
+// import { selectBalance } from "../../redux/";
+// import { selectCategoriesSummary, selectSummaryTotals } from "../../redux/";
+import { mockStatistics } from "../../mock/statistics";
 
 const StatisticsDashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
   );
+
+  // const balance = useSelector(selectBalance);
+  // const categoriesSummary = useSelector(selectCategoriesSummary);
+  // const { incomeSummary, expenseSummary } = useSelector(selectSummaryTotals);
+
+  const incomeSummary = mockStatistics.incomeSummary;
+  const expenseSummary = mockStatistics.expenseSummary;
+  const balance = incomeSummary - expenseSummary;
 
   const monthOptions = [
     { value: null, label: "All" },
@@ -93,6 +108,8 @@ const StatisticsDashboard = () => {
 
   return (
     <div className={styles.container}>
+      <BallanceTab balance={balance} />
+      <CurrencyTab /> {}
       <div className={styles.statisticsChart}>
         <h1>Statistics</h1>
         <div className={styles.statisticsChartContainer}>
@@ -138,6 +155,7 @@ const StatisticsDashboard = () => {
             </Form>
           )}
         </Formik>
+
         <div className={styles.statisticsTableContainer}>
           <StatisticsTable />
         </div>

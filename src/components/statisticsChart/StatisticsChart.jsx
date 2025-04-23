@@ -1,11 +1,16 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import styles from "./StatisticsChart.module.css";
+// import { useSelector } from "react-redux";
+// import { selectBalance } from "../../redux/";
+// import { selectCategoriesSummary } from "../../redux/";
 import { mockStatistics, mockIsLoading } from "../../mock/statistics";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const StatisticsChart = () => {
+  // const balance = useSelector(selectBalance);
+  // const categoriesData = useSelector(selectCategoriesSummary);
   const statistics = mockStatistics;
   const isLoading = mockIsLoading;
 
@@ -30,7 +35,7 @@ const StatisticsChart = () => {
   const incomeSummary = statistics.incomeSummary || 0;
   const balance = incomeSummary - expenseSummary;
 
-  const chartData = categoriesData.length > 0 ? categoriesData.slice(1) : [];
+  const chartData = categoriesData.filter((cat) => cat.name !== "INCOME");
 
   const data = {
     labels: chartData.map((category) => category.name),
@@ -65,21 +70,15 @@ const StatisticsChart = () => {
     maintainAspectRatio: false,
   };
 
-  const formatBalance = (number) => {
-    if (!number && number !== 0) return "₺0.00";
-    const prefix = number >= 0 ? "₺" : "-₺";
-    return `${prefix}${Math.abs(number)
-      .toFixed(2)
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`;
-  };
-
   return (
     <div className={styles.container}>
       {chartData.length > 0 ? (
         <div className={styles.chartWrapper}>
           <Doughnut data={data} options={options} />
           <div className={styles.balanceDisplay}>
-            <p className={styles.balanceAmount}>{formatBalance(balance)}</p>
+            <p className={styles.balanceAmount}>
+              ₴ {balance.toLocaleString("uk-UA", { minimumFractionDigits: 2 })}
+            </p>
           </div>
         </div>
       ) : (
